@@ -35,6 +35,7 @@ export default {
   & &-field {
     resize: none;
     width: 100%;
+    background: red;
   }
 }
 </style>
