@@ -15,6 +15,7 @@
 // import { onMounted } from "vue";
 
 export default {
+  name: "ConverterCard",
   components: {
     // InputComp,
   },
@@ -27,9 +28,7 @@ export default {
   },
 
   setup(props) {
-    console.log(props.parentData);
-
-    return {};
+    return { props };
   },
 };
 </script>

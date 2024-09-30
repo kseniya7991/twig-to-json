@@ -2,12 +2,12 @@
   <div class="converter">
     <converter-card :parentData="inputData">
       <template #default>
-        <InputComp />
+        <InputComp @conversionCompleted="testEvent" />
       </template>
     </converter-card>
     <converter-card :parentData="outputData">
       <template #default>
-        <OutputComp />
+        <OutputComp :result="converterResult" />
       </template>
     </converter-card>
   </div>
@@ -27,6 +27,7 @@ export default {
     OutputComp,
   },
   setup() {
+    const converterResult = ref("test result");
     const inputData = ref({
       title: "TWIG template Input",
       descr: "Lorem, ipsum dolor sit amet consectetur adipisicing",
@@ -36,9 +37,15 @@ export default {
       descr: "Lorem, ipsum dolor sit amet consectetur adipisicing",
     });
 
+    const testEvent = (data) => {
+      converterResult.value = JSON.stringify(data);
+    };
+
     return {
       inputData,
       outputData,
+      testEvent,
+      converterResult,
     };
   },
 };
