@@ -17,52 +17,53 @@ export default {
     const resultObj = ref({});
 
     const startConvert = () => {
-      const regexItemParentName = /\w+/gm;
-      const regexForParentName = /\b(?!endfor\b)\w+\b(?=\s%})/gm;
-
+      resultObj.value = {};
       const combinedRegex =
         /(?<for>{%\s*for\b.*?%})|(?<endfor>{%\s*endfor\s*%})|(?<={{)(?<content>\w+(\.\w+)*)(?=}})/gm;
       const matches = Array.from(textarea.value.matchAll(combinedRegex));
 
-      console.log(matches);
+      parseMatches(matches);
+      emit("conversionCompleted", resultObj.value);
+    };
 
+    const parseMatches = (matches) => {
       let level = 0;
       let lastObjStack = [resultObj.value]; // Access the value of ref
       let lastFor = null;
+
       matches.forEach((el) => {
-        let matchContent = el[0].match(regexItemParentName);
+        let matchContent = el[0].match(/\w+/gm);
 
-        if (el.groups.content && matchContent && level == 0) {
-          let itemObj = {};
-          arrayToNestedObject(matchContent, itemObj);
-          deepMerge(resultObj.value, itemObj);
-        }
-
-        if (el.groups.content && matchContent && level !== 0) {
-          let itemObj = lastObjStack[level - 1][lastFor];
-          arrayToNestedObject(matchContent, itemObj);
-        }
-
-        if (el.groups.for) {
-          level += 1;
-
-          let forMatch = el.groups.for.match(regexForParentName);
-          let newObj = {};
-
-          lastObjStack[level - 1][forMatch[0]] = newObj;
-          lastFor = forMatch[0];
-
-          lastObjStack.push(newObj);
-        }
-
-        if (el.groups.endfor) {
+        if (el.groups.content && matchContent) {
+          handleContent(matchContent, level, lastObjStack, lastFor);
+        } else if (el.groups.for) {
+          ({ level, lastFor, lastObjStack } = handleFor(
+            el,
+            level,
+            lastObjStack
+          ));
+        } else if (el.groups.endfor) {
+          level--;
           lastObjStack.pop();
-          level -= 1;
         }
       });
+    };
 
-      console.log(resultObj.value);
-      emit("conversionCompleted", resultObj.value);
+    const handleContent = (matchContent, level, lastObjStack, lastFor) => {
+      let itemObj = level === 0 ? {} : lastObjStack[level - 1][lastFor];
+      arrayToNestedObject(matchContent, itemObj);
+
+      if (level === 0) {
+        deepMerge(resultObj.value, itemObj);
+      }
+    };
+
+    const handleFor = (el, level, lastObjStack) => {
+      const forMatch = el.groups.for.match(/\b(?!endfor\b)\w+\b(?=\s%})/gm);
+      let newObj = {};
+      lastObjStack[level][forMatch[0]] = newObj;
+      lastObjStack.push(newObj);
+      return { level: level + 1, lastFor: forMatch[0], lastObjStack };
     };
 
     const arrayToNestedObject = (arr, obj) => {
