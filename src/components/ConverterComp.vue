@@ -57,14 +57,14 @@ export default {
   display: grid;
   grid-template-columns: 1fr 1fr;
   align-items: stretch;
-  gap: 20px;
+  gap: 50px;
 
   width: 100%;
-  padding: 20px;
+  padding: 20px 40px;
   max-width: 100%;
 
   @media (max-width: 768px) {
-    gap: 10px;
+    gap: 35px;
   }
 }
 </style>

@@ -39,18 +39,14 @@ export default {
 
 <style lang="scss">
 .converter__card {
+  position: relative;
+
   display: flex;
   align-items: stretch;
   flex-direction: column;
-  padding: 30px;
-
   border-radius: 30px;
 
   text-align: left;
-
-  @media (max-width: 991px) {
-    padding: 15px;
-  }
 
   &.mounted {
     .converter__card-field {
