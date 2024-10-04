@@ -29,12 +29,13 @@ export default {
   setup() {
     const converterResult = ref("");
     const inputData = ref({
-      title: "TWIG template Input",
+      title: "Twig template",
       descr: "Lorem, ipsum dolor sit amet consectetur adipisicing",
     });
     const outputData = ref({
-      title: "JSON Output",
+      title: "JSON",
       descr: "Lorem, ipsum dolor sit amet consectetur adipisicing",
+      modificator: "converter__card_json",
     });
 
     const handleResult = (data) => {
@@ -61,5 +62,9 @@ export default {
   width: 100%;
   padding: 20px;
   max-width: 100%;
+
+  @media (max-width: 768px) {
+    gap: 10px;
+  }
 }
 </style>
