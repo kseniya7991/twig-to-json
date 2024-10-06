@@ -22,10 +22,13 @@ export default {
         .replace(/^\s+/gm, "") // удаляет начальные пробелы в строке
         .replace(/\s+$/gm, ""); // удаляет конечные пробелы в строке
 
-      resultObj.value = {};
       const combinedRegex =
         /(?<for>{%\s*for\b.*?%})|(?<endfor>{%\s*endfor\s*%})|(?<={{)(?<content>\w+(\.\w+)*)(?=}})/gm;
       const matches = Array.from(textarea.value.matchAll(combinedRegex));
+
+      let firstFor = matches[0][0].match(/\b(?!endfor\b)\w+\b(?=\s%})/gm);
+      let resultObjValue = firstFor ? [{}] : {};
+      resultObj.value = resultObjValue;
 
       parseMatches(matches);
       emit("conversionCompleted", resultObj.value);
@@ -55,7 +58,17 @@ export default {
     };
 
     const handleContent = (matchContent, level, lastObjStack, lastFor) => {
-      let itemObj = level === 0 ? {} : lastObjStack[level - 1][lastFor];
+      let itemObj = {};
+
+      if (level !== 0) {
+        let prevLevel = lastObjStack[level - 1];
+        let isArray = Array.isArray(prevLevel);
+        prevLevel = isArray
+          ? prevLevel[0][lastFor][0]
+          : lastObjStack[level - 1][lastFor][0];
+        itemObj = prevLevel;
+      }
+
       arrayToNestedObject(matchContent, itemObj);
 
       if (level === 0) {
@@ -65,9 +78,16 @@ export default {
 
     const handleFor = (el, level, lastObjStack) => {
       const forMatch = el.groups.for.match(/\b(?!endfor\b)\w+\b(?=\s%})/gm);
-      let newObj = {};
-      lastObjStack[level][forMatch[0]] = newObj;
+      let newObj = [{}];
+      let handleLevel = lastObjStack[level];
+
+      if (handleLevel !== undefined) {
+        handleLevel = handleLevel[0] ?? handleLevel;
+      }
+
+      handleLevel[forMatch[0]] = newObj;
       lastObjStack.push(newObj);
+
       return { level: level + 1, lastFor: forMatch[0], lastObjStack };
     };
 
