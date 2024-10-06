@@ -64,6 +64,7 @@ export default {
   max-width: 100%;
 
   @media (max-width: 768px) {
+    grid-template-columns: 1fr;
     gap: 35px;
   }
 }

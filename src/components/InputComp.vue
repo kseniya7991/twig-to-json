@@ -26,7 +26,10 @@ export default {
         /(?<for>{%\s*for\b.*?%})|(?<endfor>{%\s*endfor\s*%})|(?<={{)(?<content>\w+(\.\w+)*)(?=}})/gm;
       const matches = Array.from(textarea.value.matchAll(combinedRegex));
 
-      let firstFor = matches[0][0].match(/\b(?!endfor\b)\w+\b(?=\s%})/gm);
+      let firstFor =
+        matches && matches[0] && matches[0][0]
+          ? matches[0][0].match(/\b(?!endfor\b)\w+\b(?=\s%})/gm)
+          : null;
       resultObj.value = firstFor ? [{}] : {};
 
       parseMatches(matches);

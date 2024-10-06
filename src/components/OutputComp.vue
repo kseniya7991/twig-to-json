@@ -1,6 +1,5 @@
 <template>
-  <textarea name="" class="converter__card-field" v-model="localValue">
-  </textarea>
+  <output name="" class="converter__card-field"> {{ localValue }} </output>
 
   <div class="copy" ref="copyBtn" @click="copyResult">
     <svg

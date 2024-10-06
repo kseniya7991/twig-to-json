@@ -84,6 +84,7 @@ export default {
     );
 
     font-size: 16px;
+    color: rgb(38, 39, 41);
 
     border: none;
     border-radius: 10px;
