@@ -27,8 +27,7 @@ export default {
       const matches = Array.from(textarea.value.matchAll(combinedRegex));
 
       let firstFor = matches[0][0].match(/\b(?!endfor\b)\w+\b(?=\s%})/gm);
-      let resultObjValue = firstFor ? [{}] : {};
-      resultObj.value = resultObjValue;
+      resultObj.value = firstFor ? [{}] : {};
 
       parseMatches(matches);
       emit("conversionCompleted", resultObj.value);
@@ -62,11 +61,10 @@ export default {
 
       if (level !== 0) {
         let prevLevel = lastObjStack[level - 1];
-        let isArray = Array.isArray(prevLevel);
-        prevLevel = isArray
+        const target = Array.isArray(prevLevel)
           ? prevLevel[0][lastFor][0]
-          : lastObjStack[level - 1][lastFor][0];
-        itemObj = prevLevel;
+          : prevLevel[lastFor][0];
+        itemObj = target;
       }
 
       arrayToNestedObject(matchContent, itemObj);
@@ -79,13 +77,9 @@ export default {
     const handleFor = (el, level, lastObjStack) => {
       const forMatch = el.groups.for.match(/\b(?!endfor\b)\w+\b(?=\s%})/gm);
       let newObj = [{}];
-      let handleLevel = lastObjStack[level];
+      let fixedLevel = lastObjStack[level][0] ?? lastObjStack[level];
 
-      if (handleLevel !== undefined) {
-        handleLevel = handleLevel[0] ?? handleLevel;
-      }
-
-      handleLevel[forMatch[0]] = newObj;
+      fixedLevel[forMatch[0]] = newObj;
       lastObjStack.push(newObj);
 
       return { level: level + 1, lastFor: forMatch[0], lastObjStack };
