@@ -25,7 +25,6 @@
         stroke-linejoin="round"
       />
     </svg>
-    <!-- <img alt="converter" src="./assets/repost.png" class="title__logo" /> -->
     <span>JSON</span>
   </h1>
   <converter-comp />
