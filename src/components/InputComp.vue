@@ -15,6 +15,8 @@ export default {
   setup(_, { emit }) {
     const textarea = ref("");
     const resultObj = ref({});
+    const firstLevelFor = ref(0);
+    const result = ref();
 
     const startConvert = () => {
       textarea.value = textarea.value
@@ -26,13 +28,21 @@ export default {
         /(?<for>{%\s*for\b.*?%})|(?<endfor>{%\s*endfor\s*%})|(?<={{)(?<content>\w+(\.\w+)*)(?=}})/gm;
       const matches = Array.from(textarea.value.matchAll(combinedRegex));
 
-      let firstFor =
-        matches && matches[0] && matches[0][0]
-          ? matches[0][0].match(/\b(?!endfor\b)\w+\b(?=\s%})/gm)
-          : null;
-      resultObj.value = firstFor ? [{}] : {};
+      // let firstFor =
+      //   matches && matches[0] && matches[0][0]
+      //     ? matches[0][0].match(/\b(?!endfor\b)\w+\b(?=\s%})/gm)
+      //     : null;
+
+      resultObj.value = {};
+      firstLevelFor.value = 0;
 
       parseMatches(matches);
+
+      // result.value =
+      //   firstFor && firstLevelFor.value == 1
+      //     ? [resultObj.value]
+      //     : resultObj.value;
+      console.log(result.value, resultObj.value);
       emit("conversionCompleted", resultObj.value);
     };
 
@@ -47,6 +57,8 @@ export default {
         if (el.groups.content && matchContent) {
           handleContent(matchContent, level, lastObjStack, lastFor);
         } else if (el.groups.for) {
+          if (level == 0) firstLevelFor.value++;
+          console.log(el, level);
           ({ level, lastFor, lastObjStack } = handleFor(
             el,
             level,
@@ -55,6 +67,7 @@ export default {
         } else if (el.groups.endfor) {
           level--;
           lastObjStack.pop();
+          console.log(el, level);
         }
       });
     };
