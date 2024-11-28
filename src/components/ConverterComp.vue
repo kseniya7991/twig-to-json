@@ -1,3 +1,27 @@
+<script setup>
+import { ref } from "vue";
+import ConverterCard from "@/components/ConverterCard.vue";
+import InputComp from "@/components/InputComp.vue";
+import OutputComp from "@/components/OutputComp.vue";
+
+// ======= State =======
+const converterResult = ref("");
+const inputData = {
+  title: "Twig template",
+  descr: "Lorem, ipsum dolor sit amet consectetur adipisicing",
+};
+const outputData = {
+  title: "JSON",
+  descr: "Lorem, ipsum dolor sit amet consectetur adipisicing",
+  modificator: "converter__card_json",
+};
+
+// ======= Methods =======
+const handleResult = (data) => {
+  converterResult.value = JSON.stringify(data);
+};
+</script>
+
 <template>
   <div class="converter">
     <converter-card :parentData="inputData">
@@ -12,45 +36,6 @@
     </converter-card>
   </div>
 </template>
-
-<script>
-import { ref } from "vue";
-import ConverterCard from "@/components/ConverterCard.vue";
-import InputComp from "@/components/InputComp.vue";
-import OutputComp from "@/components/OutputComp.vue";
-
-export default {
-  name: "ConverterComp",
-  components: {
-    ConverterCard,
-    InputComp,
-    OutputComp,
-  },
-  setup() {
-    const converterResult = ref("");
-    const inputData = ref({
-      title: "Twig template",
-      descr: "Lorem, ipsum dolor sit amet consectetur adipisicing",
-    });
-    const outputData = ref({
-      title: "JSON",
-      descr: "Lorem, ipsum dolor sit amet consectetur adipisicing",
-      modificator: "converter__card_json",
-    });
-
-    const handleResult = (data) => {
-      converterResult.value = JSON.stringify(data);
-    };
-
-    return {
-      inputData,
-      outputData,
-      handleResult,
-      converterResult,
-    };
-  },
-};
-</script>
 
 <style lang="scss" scoped>
 .converter {

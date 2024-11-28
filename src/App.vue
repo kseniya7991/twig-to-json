@@ -1,3 +1,16 @@
+<script setup>
+import ConverterComp from "@/components/ConverterComp.vue";
+import { ref } from "vue";
+
+// ======= State =======
+const mountedClass = ref("");
+
+// ======= Methods =======
+setTimeout(() => {
+  mountedClass.value = "mounted";
+}, 500);
+</script>
+
 <template>
   <h1 class="title" :class="mountedClass">
     <span>Twig</span>
@@ -29,31 +42,6 @@
   </h1>
   <converter-comp />
 </template>
-
-<script>
-import ConverterComp from "@/components/ConverterComp.vue";
-import { ref, onMounted } from "vue";
-
-export default {
-  name: "App",
-  components: {
-    ConverterComp,
-  },
-
-  setup() {
-    const mountedClass = ref("");
-    onMounted(() => {
-      setTimeout(() => {
-        mountedClass.value = "mounted";
-      }, 500);
-    });
-
-    return {
-      mountedClass,
-    };
-  },
-};
-</script>
 
 <style lang="scss">
 @font-face {

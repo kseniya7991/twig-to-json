@@ -1,41 +1,34 @@
+<script setup>
+import { ref, defineProps } from "vue";
+
+// ======= Props =======
+const props = defineProps({
+  parentData: {
+    type: Object,
+    required: true,
+  },
+});
+
+// ======= State =======
+const mountedClass = ref("");
+
+// ======= Methods =======
+setTimeout(() => {
+  mountedClass.value = "mounted";
+}, 500);
+</script>
+
 <template>
-  <div class="converter__card" :class="[parentData.modificator, mountedClass]">
+  <div
+    class="converter__card"
+    :class="[props.parentData.modificator, mountedClass]"
+  >
     <h3 class="converter__card-title">
       {{ parentData.title }}
     </h3>
     <slot></slot>
   </div>
 </template>
-
-<script>
-// import InputComp from "@/components/InputComp.vue";
-import { ref, onMounted } from "vue";
-
-export default {
-  name: "ConverterCard",
-  components: {
-    // InputComp,
-  },
-
-  props: {
-    parentData: {
-      type: Object,
-      required: true,
-    },
-  },
-
-  setup(props) {
-    const mountedClass = ref("");
-    onMounted(() => {
-      setTimeout(() => {
-        mountedClass.value = "mounted";
-      }, 500);
-    });
-
-    return { props, mountedClass };
-  },
-};
-</script>
 
 <style lang="scss">
 .converter__card {
