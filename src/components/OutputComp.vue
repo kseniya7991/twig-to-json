@@ -1,5 +1,54 @@
+<script setup>
+import Prism from "prismjs";
+import "prismjs/themes/prism-coy.css";
+import "prismjs/components/prism-json.min.js";
+import { ref, watch, defineProps, nextTick } from "vue";
+
+// ======= Props =======
+const props = defineProps({
+  result: {
+    type: String,
+    required: false,
+  },
+});
+
+// ======= State =======
+const localValue = ref(props.result);
+const copyBtn = ref(null);
+const timer = ref(null);
+
+// ======= Methods =======
+const copyResult = async () => {
+  try {
+    await navigator.clipboard.writeText(localValue.value);
+    copyBtn.value.classList.add("copied");
+
+    clearTimeout(timer.value);
+    timer.value = setTimeout(() => {
+      copyBtn.value.classList.remove("copied");
+    }, 1000);
+  } catch (err) {
+    console.error("Failed to copy text:", err);
+  }
+};
+
+// ======= Watchers =======
+watch(
+  () => props.result,
+  (newValue) => {
+    const jsonObject = JSON.parse(newValue);
+    localValue.value = JSON.stringify(jsonObject, null, 2);
+    nextTick(() => {
+      Prism.highlightAll();
+    });
+  },
+);
+</script>
+
 <template>
-  <output name="" class="converter__card-field"> {{ localValue }} </output>
+  <!-- <output name="" class="converter__card-field"> {{ localValue }} </output> -->
+
+  <pre><code class="language-json converter__card-field">{{ localValue }}</code></pre>
 
   <div class="copy" ref="copyBtn" @click="copyResult">
     <svg
@@ -24,60 +73,6 @@
     </svg>
   </div>
 </template>
-
-<script>
-import { ref, watch, onMounted } from "vue";
-
-export default {
-  props: {
-    result: {
-      type: String,
-      required: false,
-    },
-  },
-
-  setup(props) {
-    const localValue = ref(props.result);
-    const copyBtn = ref(null);
-    const timer = ref(null);
-
-    onMounted(() => {
-      console.log(copyBtn.value);
-    });
-
-    const copyResult = async () => {
-      console.log("test");
-
-      try {
-        await navigator.clipboard.writeText(localValue.value);
-        copyBtn.value.classList.add("copied");
-
-        clearTimeout(timer.value);
-        timer.value = setTimeout(() => {
-          copyBtn.value.classList.remove("copied");
-        }, 1000);
-      } catch (err) {
-        console.error("Failed to copy text:", err);
-      }
-    };
-
-    watch(
-      () => props.result,
-      (newValue) => {
-        localValue.value = newValue;
-        // .replace(/^{/g, "{\n") // добавляет переносы строк между тегами
-        // .replace(/}$/g, "\n}") // добавляет переносы строк между тегами
-        // .replace(/,/gm, ",\n"); // удаляет начальные пробелы в строке
-        // .replace(/:{/gm, ":\n{") // удаляет конечные пробелы в строке
-        // .replace(/\n/gm, "\n    ") // удаляет конечные пробелы в строке
-        // .replace(/{"/gm, '{\n    "'); // удаляет конечные пробелы в строке
-      },
-    );
-
-    return { props, localValue, copyBtn, copyResult };
-  },
-};
-</script>
 
 <style lang="scss" scoped>
 .copy {
@@ -107,6 +102,35 @@ export default {
   svg {
     width: 100%;
     height: 100%;
+  }
+}
+
+pre {
+  margin: 0;
+}
+
+.converter__card-field.language-json {
+  background-image: linear-gradient(
+    275deg,
+    #e9f2f4 0%,
+    rgb(220, 253, 241) 100%
+  );
+  box-shadow: none;
+  background-color: transparent;
+  background-size: cover;
+  background-origin: border-box;
+  border-left: 0;
+
+  &::before,
+  &::after {
+    display: none;
+  }
+}
+
+pre {
+  &::before,
+  &::after {
+    display: none;
   }
 }
 </style>
