@@ -79,6 +79,7 @@ watch(
   position: absolute;
   max-width: 40px;
   max-height: 40px;
+  z-index: 2;
 
   right: 5px;
   bottom: 5px;
