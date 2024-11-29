@@ -1,5 +1,7 @@
 <script setup>
 import { ref, defineEmits } from "vue";
+import prettier from "prettier/standalone";
+import parserHTML from "prettier/plugins/html";
 
 // ======= Emits =======
 const emit = defineEmits(["conversionCompleted"]);
@@ -10,7 +12,19 @@ const resultObj = ref({});
 const firstLevelFor = ref(0);
 
 // ======= Methods =======
+const prettierInputValue = async () => {
+  try {
+    textarea.value = await prettier.format(textarea.value, {
+      parser: "html",
+      plugins: [parserHTML],
+    });
+  } catch (error) {
+    textarea.value = "Ошибка форматирования: " + error.message;
+  }
+};
+
 const startConvert = () => {
+  prettierInputValue();
   const combinedRegex =
     /(?<for>{%\s*for\b.*?%})|(?<endfor>{%\s*endfor\s*%})|(?<={{)(?<content>\w+(\.\w+)*)(?=}})/gm;
   const matches = Array.from(textarea.value.matchAll(combinedRegex));
