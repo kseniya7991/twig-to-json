@@ -6,13 +6,15 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "deploy": "vercel --prod"
   },
   "dependencies": {
     "core-js": "^3.8.3",
+    "prettier": "^3.4.1",
     "prismjs": "^1.29.0",
-    "vue": "^3.2.13",
-    "vue-prismjs": "^1.2.0"
+    "vercel": "^39.1.2",
+    "vue": "^3.2.13"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
@@ -30,7 +32,6 @@
     "eslint-plugin-vue": "^8.0.3",
     "jest": "^27.0.5",
     "os-browserify": "^0.3.0",
-    "prettier": "^3.4.1",
     "sass": "^1.32.7",
     "sass-loader": "^12.0.0",
     "util": "^0.12.5"
