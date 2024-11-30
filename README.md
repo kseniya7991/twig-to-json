@@ -1,29 +1,42 @@
-# twig-to-json
+# Twig to JSON Converter
 
-## Project setup
-```
-npm install
+There is a small converter that transforms Twig templates into JSON data structures.
+This is convenient if you need to substitute and test data through JSON.
+
+## Live
+
+The project is live here https://twig-to-json.vercel.app/.
+
+## Technologies
+
+-   [Vue.js](https://vuejs.org/)
+
+### Installation
+
+To install the dependencies, run the following command:
+
+```sh
+$ npm i
 ```
 
-### Compiles and hot-reloads for development
-```
+### Run Development Server
+
+To start the development server, run the following command:
+
+```sh
 npm run serve
 ```
 
-### Compiles and minifies for production
-```
+### Build
+
+To build the production version, run the following command:
+
+```sh
 npm run build
 ```
 
-### Run your unit tests
-```
-npm run test:unit
-```
+## Project Developer
 
-### Lints and fixes files
-```
-npm run lint
-```
+Open to suggestions for project functionality and improvements.
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+**Ksenia Stoichykava** — _Creative Front-End Developer_
